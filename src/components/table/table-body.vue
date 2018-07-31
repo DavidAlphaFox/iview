@@ -1,7 +1,7 @@
 <template>
     <table cellspacing="0" cellpadding="0" border="0" :style="styleObject">
         <colgroup>
-            <col v-for="(column, index) in columns" :width="setCellWidth(column, index, false)">
+            <col v-for="(column, index) in columns" :width="setCellWidth(column)">
         </colgroup>
         <tbody :class="[prefixCls + '-tbody']">
             <template v-for="(row, index) in data">
@@ -28,7 +28,7 @@
                         ></Cell>
                     </td>
                 </table-tr>
-                <tr v-if="rowExpanded(row._index)">
+                <tr v-if="rowExpanded(row._index)" :class="{[prefixCls + '-expanded-hidden']: fixed}">
                     <td :colspan="columns.length" :class="prefixCls + '-expanded-cell'">
                         <Expand :key="row._rowKey" :row="row" :render="expandRender" :index="row._index"></Expand>
                     </td>

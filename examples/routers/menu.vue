@@ -1,51 +1,46 @@
 <template>
-    <div>
-        <Menu mode="horizontal" :theme="theme1" active-name="1">
-            <Menu-item name="1">
-                <Icon type="ios-paper"></Icon>
-                内容管理
-            </Menu-item>
-            <Menu-item name="2">
-                <Icon type="ios-people"></Icon>
-                用户管理
-            </Menu-item>
+    <Menu active-name="1-2" :open-names="['1']">
+        <Submenu name="1">
+            <template slot="title">
+                <Icon type="ios-analytics"></Icon>
+                Navigation One
+            </template>
+            <MenuGroup title="Item 1">
+                <MenuItem name="1-1">我是菜单一</MenuItem>
+                <MenuItem name="1-2">我是菜单二</MenuItem>
+            </MenuGroup>
+            <MenuGroup title="Item 2">
+                <MenuItem name="1-3">我是菜单三</MenuItem>
+                <MenuItem name="1-4">我是菜单四</MenuItem>
+            </MenuGroup>
+        </Submenu>
+        <Submenu name="2">
+            <template slot="title">
+                <Icon type="ios-filing"></Icon>
+                Navigation Two
+            </template>
+            <MenuItem name="2-1">我是菜单五</MenuItem>
+            <MenuItem name="2-2">我是菜单六</MenuItem>
             <Submenu name="3">
-                <template slot="title">
-                    <Icon type="stats-bars"></Icon>
-                    统计分析
-                </template>
-                <Menu-group title="使用">
-                    <Menu-item name="3-1">新增和启动</Menu-item>
-                    <Menu-item name="3-2">活跃分析</Menu-item>
-                    <Menu-item name="3-3">时段分析</Menu-item>
-                </Menu-group>
-                <Menu-group title="留存">
-                    <Menu-item name="3-4">用户留存</Menu-item>
-                    <Menu-item name="3-5">流失用户</Menu-item>
-                </Menu-group>
+                <template slot="title">Submenu</template>
+                <MenuItem name="3-1">我是菜单七</MenuItem>
+                <MenuItem name="3-2">我是菜单八</MenuItem>
             </Submenu>
-            <Menu-item name="4">
-                <Icon type="settings"></Icon>
-                综合设置
-            </Menu-item>
-        </Menu>
-        <br>
-        <p>切换主题</p>
-        <Radio-group v-model="theme1">
-            <Radio label="light"></Radio>
-            <Radio label="dark"></Radio>
-            <Radio label="primary"></Radio>
-        </Radio-group>
-        <Input v-model="value4" icon="ios-clock-outline" placeholder="请输入..." style="width: 200px"></Input>
-    </div>
+        </Submenu>
+        <Submenu name="4">
+            <template slot="title">
+                <Icon type="ios-gear"></Icon>
+                Navigation Three
+            </template>
+            <MenuItem name="4-1">Option 9</MenuItem>
+            <MenuItem name="4-2">Option 10</MenuItem>
+            <MenuItem name="4-3">Option 11</MenuItem>
+            <MenuItem name="4-4">Option 12</MenuItem>
+        </Submenu>
+    </Menu>
 </template>
 <script>
     export default {
-        data () {
-            return {
-                theme1: 'light',
-                value4: ''
-            }
-        }
+
     }
 </script>

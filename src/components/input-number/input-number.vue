@@ -20,15 +20,18 @@
                 :class="inputClasses"
                 :disabled="disabled"
                 autocomplete="off"
+                spellcheck="false"
                 :autofocus="autofocus"
                 @focus="focus"
                 @blur="blur"
                 @keydown.stop="keyDown"
                 @input="change"
+                @mouseup="preventDefault"
                 @change="change"
                 :readonly="readonly || !editable"
                 :name="name"
-                :value="precisionValue">
+                :value="formatterValue"
+                :placeholder="placeholder">
         </div>
     </div>
 </template>
@@ -86,6 +89,9 @@
             size: {
                 validator (value) {
                     return oneOf(value, ['small', 'large', 'default']);
+                },
+                default () {
+                    return this.$IVIEW.size === '' ? 'default' : this.$IVIEW.size;
                 }
             },
             disabled: {
@@ -112,7 +118,17 @@
             },
             elementId: {
                 type: String
-            }
+            },
+            formatter: {
+                type: Function
+            },
+            parser: {
+                type: Function
+            },
+            placeholder: {
+                type: String,
+                default: ''
+            },
         },
         data () {
             return {
@@ -168,7 +184,15 @@
             },
             precisionValue () {
                 // can not display 1.0
+                if(!this.currentValue) return this.currentValue;
                 return this.precision ? this.currentValue.toFixed(this.precision) : this.currentValue;
+            },
+            formatterValue () {
+                if (this.formatter && this.precisionValue !== null) {
+                    return this.formatter(this.precisionValue);
+                } else {
+                    return this.precisionValue;
+                }
             }
         },
         methods: {
@@ -227,7 +251,7 @@
             },
             setValue (val) {
                 // 如果 step 是小数，且没有设置 precision，是有问题的
-                if (!isNaN(this.precision)) val = Number(Number(val).toFixed(this.precision));
+                if (val && !isNaN(this.precision)) val = Number(Number(val).toFixed(this.precision));
 
                 this.$nextTick(() => {
                     this.currentValue = val;
@@ -236,11 +260,13 @@
                     this.dispatch('FormItem', 'on-form-change', val);
                 });
             },
-            focus () {
+            focus (event) {
                 this.focused = true;
+                this.$emit('on-focus', event);
             },
             blur () {
                 this.focused = false;
+                this.$emit('on-blur');
             },
             keyDown (e) {
                 if (e.keyCode === 38) {
@@ -253,13 +279,24 @@
             },
             change (event) {
                 let val = event.target.value.trim();
+                if (this.parser) {
+                    val = this.parser(val);
+                }
 
                 if (event.type == 'input' && val.match(/^\-?\.?$|\.$/)) return; // prevent fire early if decimal. If no more input the change event will fire later
-                if (event.type == 'change' && Number(val) === this.currentValue) return; // already fired change for input event
 
                 const {min, max} = this;
                 const isEmptyString = val.length === 0;
                 val = Number(val);
+
+                if(isEmptyString){
+                    this.setValue(null);
+                    return;
+                }
+                if (event.type == 'change'){
+                    if (val === this.currentValue && val > min && val < max) return; // already fired change for input event
+                }
+
                 if (!isNaN(val) && !isEmptyString) {
                     this.currentValue = val;
 

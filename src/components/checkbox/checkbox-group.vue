@@ -6,6 +6,7 @@
 <script>
     import { findComponentsDownward, oneOf } from '../../utils/assist';
     import Emitter from '../../mixins/emitter';
+
     const prefixCls = 'ivu-checkbox-group';
 
     export default {
@@ -21,6 +22,9 @@
             size: {
                 validator (value) {
                     return oneOf(value, ['small', 'large', 'default']);
+                },
+                default () {
+                    return this.$IVIEW.size === '' ? 'default' : this.$IVIEW.size;
                 }
             }
         },
@@ -45,10 +49,9 @@
         },
         methods: {
             updateModel (update) {
-                const value = this.value;
                 this.childrens = findComponentsDownward(this, 'Checkbox');
-
                 if (this.childrens) {
+                    const { value } = this;
                     this.childrens.forEach(child => {
                         child.model = value;
 

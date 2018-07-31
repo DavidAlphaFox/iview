@@ -1,5 +1,5 @@
 <template>
-    <form :class="classes"><slot></slot></form>
+    <form :class="classes" :autocomplete="autocomplete"><slot></slot></form>
 </template>
 <script>
     // https://github.com/ElemeFE/element/blob/dev/packages/form/src/form.vue
@@ -32,7 +32,16 @@
             showMessage: {
                 type: Boolean,
                 default: true
+            },
+            autocomplete: {
+                validator (value) {
+                    return oneOf(value, ['on', 'off']);
+                },
+                default: 'off'
             }
+        },
+        provide() {
+            return { form : this };
         },
         data () {
             return {
@@ -67,14 +76,14 @@
                             }
                             if (++count === this.fields.length) {
                                 // all finish
-                                resolve(valid)
+                                resolve(valid);
                                 if (typeof callback === 'function') {
                                     callback(valid);
                                 }
                             }
                         });
                     });
-                })
+                });
             },
             validateField(prop, cb) {
                 const field = this.fields.filter(field => field.prop === prop)[0];

@@ -1,10 +1,12 @@
-export default {
+import setLang from '../lang';
+
+const lang = {
     i: {
         locale: 'sv-SE',
         select: {
             placeholder: 'Välj',
             noMatch: 'Ingen träff',
-            loading: 'Ladar'
+            loading: 'Laddar'
         },
         table: {
             noDataText: 'Ingen data',
@@ -97,3 +99,7 @@ export default {
         }
     }
 };
+
+setLang(lang);
+
+export default lang;

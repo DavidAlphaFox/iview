@@ -13,11 +13,11 @@ let messageInstance;
 let name = 1;
 
 const iconTypes = {
-    'info': 'information-circled',
-    'success': 'checkmark-circled',
-    'warning': 'android-alert',
-    'error': 'close-circled',
-    'loading': 'load-c'
+    'info': 'ios-information-circle',
+    'success': 'ios-checkmark-circle',
+    'warning': 'ios-alert',
+    'error': 'ios-close-circle',
+    'loading': 'ios-loading'
 };
 
 function getMessageInstance () {
@@ -31,7 +31,7 @@ function getMessageInstance () {
     return messageInstance;
 }
 
-function notice (content = '', duration = defaults.duration, type, onClose = function () {}, closable = false) {
+function notice (content = '', duration = defaults.duration, type, onClose = function () {}, closable = false, render = function () {}) {
     const iconType = iconTypes[type];
 
     // if loading
@@ -46,10 +46,11 @@ function notice (content = '', duration = defaults.duration, type, onClose = fun
         transitionName: 'move-up',
         content: `
             <div class="${prefixCls}-custom-content ${prefixCls}-${type}">
-                <i class="${iconPrefixCls} ${iconPrefixCls}-${iconType}${loadCls}"></i>
+                <i class="${iconPrefixCls} ${iconPrefixCls}-${iconType} ${loadCls}"></i>
                 <span>${content}</span>
             </div>
         `,
+        render: render,
         onClose: onClose,
         closable: closable,
         type: 'message'
@@ -89,7 +90,7 @@ export default {
                 content: options
             };
         }
-        return notice(options.content, options.duration, type, options.onClose, options.closable);
+        return notice(options.content, options.duration, type, options.onClose, options.closable, options.render);
     },
     config (options) {
         if (options.top || options.top === 0) {
